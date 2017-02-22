@@ -1,0 +1,23 @@
+{
+  "name": "neo",
+  "version": "0.0.1",
+  "description": "Matrix bot that sends you gifs from giphy",
+  "scripts": {
+    "start": "env-cmd .env node index.js",
+    "watch": "env-cmd .env node-dev index.js"
+  },
+  "main": "index.js",
+  "repository": {},
+  "author": "erdiicodes@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.15.3",
+    "env-cmd": "^4.0.0",
+    "giphy-api": "^1.2.3",
+    "matrix-js-sdk": "^0.7.5",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "node-dev": "^3.1.3"
+  }
+}
