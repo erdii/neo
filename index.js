@@ -64,6 +64,7 @@ client.on("Room.timeline", (event, room, toStartOfTimeline) => {
 		query,
 		room,
 		event,
+		client,
 	});
 });
 
