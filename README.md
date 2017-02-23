@@ -5,6 +5,7 @@
 
 ## TODO
 
+* send msg that i don't know this plugin
 * remove clutter from git repo (e.g. json folder)
 * natural language processing
 * streamline error handling in plugins
