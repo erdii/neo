@@ -3,7 +3,6 @@ const sdk = require("matrix-js-sdk");
 const giphy = require("giphy-api")({
 	https: true,
 });
-const utils = require("./lib/utils");
 
 const config = {
 	schema: process.env.SCHEMA,
