@@ -5,6 +5,7 @@ node_modules
 # storages
 storages/auth
 storages/session
+storages/**/*
 
 # dev stuff
 _dev/

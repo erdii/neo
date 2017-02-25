@@ -41,15 +41,17 @@ const authenticator = new Authenticator({
 let matrixClient;
 
 Promise.resolve()
-    .then(authenticator.getAccessToken)
-    .then(token => {
-        console.log("Got Token: %s", token);
-        config.set("credentials.token", token);
+    .then(authenticator.getCredentials)
+    .then(credentials => {
+        console.log("Got creds:", credentials);
+        return credentials
     })
-    .then(() => {
+    .then((credentials) => {
         matrixClient = new MatrixClient({
             handleQuery: pluginLoader.handleQuery,
+            sessionStore: storageManager.sessionStore,
             config,
+            credentials,
         });
     })
     .then(() => {
