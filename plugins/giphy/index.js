@@ -9,8 +9,8 @@ exports.metaData = {
 };
 
 exports.plugin = client => ({ query, room, event}) => {
-	console.log("giphy plugin here", query);
 	// TODO start promise chain 
+
 	if (!query) {
 		client.sendTextMessage(room.roomId, "no keyword");
 		return; // no keyword
