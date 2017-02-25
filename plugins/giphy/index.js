@@ -1,17 +1,22 @@
-exports.metaData = {
-    name: "giphy",
-    keyword: "giphy",
-}
-
+const request = require("request");
 const giphy = require("giphy-api")({
 	https: true,
 });
-const request = require("request");
+
+exports.metaData = {
+	name: "giphy",
+	keyword: "giphy",
+};
 
 exports.plugin = client => ({ query, room, event}) => {
-    console.log("giphy plugin here", query);
-    // TODO start promise chain 
-    giphy.translate(query, (err, res) => {
+	console.log("giphy plugin here", query);
+	// TODO start promise chain 
+	if (!query) {
+		client.sendTextMessage(room.roomId, "no keyword");
+		return; // no keyword
+	}
+
+	giphy.translate(query, (err, res) => {
 		if (err) {
 			console.error("error");
 			console.error(err);
@@ -60,4 +65,4 @@ exports.plugin = client => ({ query, room, event}) => {
 			console.error(err);
 		});
 	});
-}
+};
