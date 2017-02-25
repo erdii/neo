@@ -6,6 +6,7 @@
 ## WIP
 * reworking init mechanism
 * pluginLoader should be reworked
+* trust e2e device keys
 
 ## TODO
 

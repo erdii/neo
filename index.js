@@ -1,27 +1,3 @@
-/*
-The plan: 
-+ load the "config module" which does:
-    * parse envvars, etc
-* load the "storage module" which does:
-    * storage for the authenticator
-    * e2e session storage
-* load the "authenticator" which does:
-    * check if we already have an access token
-    * if yes use it
-    * if not login with our credentials
-    * use the acquired token
-* load the all plugins:
-    * scan for plugins
-    * load them
-* spin up the actual client instance and:
-    * listen for invitiations:
-        * follow them
-    * discover new device keys
-        * trust them when we see them (?)
-    * listen for room messages:
-        * if activation criteria are met run a plugin
-*/
-
 const StorageManager = require("./lib/StorageManager");
 const Authenticator = require("./lib/Authenticator");
 const MatrixClient = require("./lib/MatrixClient");
@@ -42,10 +18,6 @@ let matrixClient;
 
 Promise.resolve()
     .then(authenticator.getCredentials)
-    .then(credentials => {
-        console.log("Got creds:", credentials);
-        return credentials
-    })
     .then((credentials) => {
         matrixClient = new MatrixClient({
             handleQuery: pluginLoader.handleQuery,
