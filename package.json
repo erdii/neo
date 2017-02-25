@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.3",
+    "convict": "^2.0.0",
     "env-cmd": "^4.0.0",
     "giphy-api": "^1.2.3",
     "matrix-js-sdk": "^0.7.5",

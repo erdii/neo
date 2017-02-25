@@ -1,71 +1,63 @@
-const sdk = require("matrix-js-sdk");
+/*
+The plan: 
++ load the "config module" which does:
+    * parse envvars, etc
+* load the "storage module" which does:
+    * storage for the authenticator
+    * e2e session storage
+* load the "authenticator" which does:
+    * check if we already have an access token
+    * if yes use it
+    * if not login with our credentials
+    * use the acquired token
+* load the all plugins:
+    * scan for plugins
+    * load them
+* spin up the actual client instance and:
+    * listen for invitiations:
+        * follow them
+    * discover new device keys
+        * trust them when we see them (?)
+    * listen for room messages:
+        * if activation criteria are met run a plugin
+*/
 
-const sessionStore = require("./lib/sessionStore");
-
+const StorageManager = require("./lib/StorageManager");
+const Authenticator = require("./lib/Authenticator");
+const MatrixClient = require("./lib/MatrixClient");
 const pluginLoader = require("./lib/pluginLoader");
 
-const config = {
-	schema: process.env.SCHEMA,
-	host: process.env.HOST,
-	token: process.env.TOKEN,
-	user: process.env.USER,
-	id: `@${process.env.USER}:${process.env.HOST}`
-};
+const config = require("./lib/config");
 
-if (!config.schema) throw new Error("SCHEMA unset");
-if (!config.host) throw new Error("HOST unset");
-if (!config.token) throw new Error("TOKEN unset");
-if (!config.user) throw new Error("USER unset");
-
-const client = sdk.createClient({
-	baseUrl: config.schema + config.host,
-	accessToken: config.token,
-	userId: config.id,
-	deviceId: "PAXOQQVLQN",
-	sessionStore,
+const storageManager = new StorageManager({
+    config,
 });
 
-// load plugins
-pluginLoader.loadPlugins(client);
-
-client.on("RoomMember.membership", (event, member) => {
-	if (member.membership == "invite" && member.userId === config.id) {
-		client.joinRoom(member.roomId).then(() => {
-			console.log("auto joined [%s]", member.roomId);
-		});
-	}
+const authenticator = new Authenticator({
+    config,
+    storageManager,
 });
 
-client.on("Room.timeline", (event, room, toStartOfTimeline) => {
-	if (toStartOfTimeline) {
-			return; // don't print paginated results
-	}
+let matrixClient;
 
-	if (event.getType() !== "m.room.message") {
-			return; // only print messages
-	}
-
-	const timestamp = event.getTs();
-
-	if (timestamp < (Date.now() - 2000)) {
-		return; // only print messages 
-	}
-
-	const body = (event.getContent().body || "").trim();
-	const userRegex = new RegExp(`@${config.user}`, "g");
-
-	if (!userRegex.test(body)) {
-		return; // only print messages containing @{config.user}
-	}
-
-	const query = body.replace(userRegex, "").trim();
-
-	pluginLoader.handleQuery({
-		query,
-		room,
-		event,
-		client,
-	});
-});
-
-client.startClient();
+Promise.resolve()
+    .then(authenticator.getAccessToken)
+    .then(token => {
+        console.log("Got Token: %s", token);
+        config.set("credentials.token", token);
+    })
+    .then(() => {
+        matrixClient = new MatrixClient({
+            handleQuery: pluginLoader.handleQuery,
+            config,
+        });
+    })
+    .then(() => {
+        pluginLoader.loadPlugins(matrixClient.client);
+    })
+    .then(() => {
+        matrixClient.startClient();
+    })
+    .catch(err => {
+        console.error("Fatal:", err);
+    });
