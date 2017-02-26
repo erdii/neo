@@ -1,6 +1,6 @@
 exports.metaData = {
 	name: "trumpsay",
-	keyword: "trumpsay",
+	keyword: "trump",
 }
 
 const request = require("request");
