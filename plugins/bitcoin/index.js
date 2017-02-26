@@ -42,23 +42,36 @@ function handleQuery(client, query, room) {
 		.then(() => {
 			const tokens = query.split(" ");
 		
-			switch (tokens.length) {
-				case 0:
-				case 1:
-					return getCurrentTickerData()
-						.then(ticker => {
-							const currency = allowedCurrencies.includes(query) ? query : "EUR";
-							const currencyValues = ticker[currency];
-							const { symbol, last } = currencyValues;
-							return client.sendTextMessage(room.roomId, `1 BTC = ${ last }${ symbol }`);
-						});
-				default:
-					const [_amount, currency] = tokens;
-					const amount = parseInt(_amount, 10);
-					return getCurrencyInBitcoin(currency, amount)
-						.then(btcAmount => {
-							return client.sendTextMessage(room.roomId, `${ amount }${ currency } = ${ btcAmount } BTC`)
-						});
+			if (tokens.length == 0 || tokens.length == 1) {
+				return getCurrentTickerData()
+					.then(ticker => {
+						const currency = allowedCurrencies.includes(query) ? query : "EUR";
+						const currencyValues = ticker[currency];
+						const { symbol, last } = currencyValues;
+						return client.sendTextMessage(room.roomId, `1 BTC = ${ last }${ symbol }`);
+					});
+			}
+			else if (tokens.length === 2) {
+				const [_amount, currency] = tokens;
+				const amount = parseInt(_amount, 10);
+				return getCurrencyInBitcoin(currency, amount)
+					.then(btcAmount => {
+						return client.sendTextMessage(room.roomId, `${ amount }${ currency } = ${ btcAmount } BTC`)
+					});
+			}
+			else if (tokens.length === 3) {
+				const [_amount, _in, currency] = tokens;
+				const amount = parseFloat(_amount);
+
+				if (_in !== "in") return; // TODO err msg
+				if (!allowedCurrencies.includes(currency)) return; // TODO err msg
+
+				return getCurrentTickerData()
+					.then(ticker => {
+						const currencyValues = ticker[currency];
+						const { symbol, last } = currencyValues;
+						return client.sendTextMessage(room.roomId, `${ amount } BTC = ${ last * amount }${ symbol }`);
+					});
 			}
 		});
 }
