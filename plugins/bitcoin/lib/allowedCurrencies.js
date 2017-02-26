@@ -1,0 +1,23 @@
+module.exports = [
+    "AUD",
+    "BRL",
+    "CAD",
+    "CHF",
+    "CLP",
+    "CNY",
+    "DKK",
+    "EUR",
+    "GBP",
+    "HKD",
+    "ISK",
+    "JPY",
+    "KRW",
+    "NZD",
+    "PLN",
+    "RUB",
+    "SEK",
+    "SGD",
+    "THB",
+    "TWD",
+    "USD"
+]

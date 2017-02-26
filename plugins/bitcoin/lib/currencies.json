@@ -1,0 +1,23 @@
+{
+	"USD": ["$", "USD", "usd"],
+	"ISK": ["kr", "ISK", "isk"],
+	"HKD": ["HKD", "hkd"],
+	"TWD": ["TWD", "twd"],
+	"CHF": ["CHF", "chf"],
+	"EUR": ["€", "EUR", "eur"],
+	"DKK": ["kr", "DKK", "dkk"],
+	"CLP": ["CLP", "clp"],
+	"CAD": ["CAD", "cad"],
+	"CNY": ["¥", "CNY", "cny"],
+	"THB": ["฿", "THY", "thy"],
+	"AUD": ["AUD", "aud"],
+	"SGD": ["SGD", "sgd"],
+	"KRW": ["₩", "KRW", "krw"],
+	"JPY": ["¥", "JPY", "jpy"],
+	"PLN": ["zł", "PLN", "pln"],
+	"GBP": ["£", "GBP", "gbp"],
+	"SEK": ["kr", "SEK", "sek"],
+	"NZD": ["NZD", "nzd"],
+	"BRL": ["BRL", "brl"],
+	"RUB": ["RUB", "rub"]
+}
